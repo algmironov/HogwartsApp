@@ -1,7 +1,6 @@
 package ru.hogwarts.school.service.impl;
 
 import org.springframework.stereotype.Service;
-import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.StudentService;
 
@@ -56,6 +55,6 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Set<Student> getAllStudents() {
-        return new HashSet<Student>(students.values());
+        return new HashSet<>(students.values());
     }
 }
