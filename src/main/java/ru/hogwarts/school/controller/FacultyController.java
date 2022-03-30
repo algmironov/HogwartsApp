@@ -52,7 +52,7 @@ public class FacultyController {
         return ResponseEntity.ok(faculty);
     }
 
-    @GetMapping("/color/{color}")
+    @GetMapping("/filter/{color}")
     public ResponseEntity<Set<Faculty>> filteredByColorFaculties(@PathVariable String color) {
         Set<Faculty> filteredSet = facultyServiceImpl.filteredByColorFaculties(color);
         if (filteredSet.isEmpty()) {

@@ -25,7 +25,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Student editStudent(Student student) {
-        if (students.containsValue(student)) {
+        if (students.containsKey(student.getId())) {
             students.put(student.getId(), student);
             return student;
         }
