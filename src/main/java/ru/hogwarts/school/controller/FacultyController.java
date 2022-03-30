@@ -7,6 +7,7 @@ import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.FacultyService;
 
+import java.util.Collection;
 import java.util.Set;
 
 @RestController
@@ -42,7 +43,7 @@ public class FacultyController {
         return ResponseEntity.ok(facultyToDelete);
     }
 
-    @GetMapping("{id}")
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<Faculty> getFaculty(@PathVariable Long id) {
         Faculty faculty = facultyServiceImpl.findFaculty(id);
         if (faculty == null) {
@@ -51,7 +52,7 @@ public class FacultyController {
         return ResponseEntity.ok(faculty);
     }
 
-    @GetMapping("{color}")
+    @GetMapping("/color/{color}")
     public ResponseEntity<Set<Faculty>> filteredByColorFaculties(@PathVariable String color) {
         Set<Faculty> filteredSet = facultyServiceImpl.filteredByColorFaculties(color);
         if (filteredSet.isEmpty()) {
@@ -61,7 +62,7 @@ public class FacultyController {
     }
 
     @GetMapping()
-    public ResponseEntity<Set<Faculty>> getAllFaculties() {
+    public ResponseEntity<Collection<Faculty>> getAllFaculties() {
         if (facultyServiceImpl.getAllFaculties().isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }

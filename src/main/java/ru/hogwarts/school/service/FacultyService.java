@@ -18,7 +18,7 @@ public interface FacultyService {
 
     Set<Faculty> filteredByColorFaculties(String color);
 
-    Set<Faculty> getAllFaculties();
+    Collection<Faculty> getAllFaculties();
 
 
 }

@@ -6,11 +6,8 @@ import ru.hogwarts.school.service.FacultyService;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Stream;
-
-import static java.util.stream.StreamSupport.stream;
+import java.util.stream.Collectors;
 
 @Service
 public class FacultyServiceImpl implements FacultyService {
@@ -36,7 +33,7 @@ public class FacultyServiceImpl implements FacultyService {
     @Override
     public Faculty deleteFaculty(long id) {
         if (faculties.containsKey(id)) {
-            return faculties.get(id);
+            return faculties.remove(id);
         }
         return null;
     }
@@ -51,17 +48,14 @@ public class FacultyServiceImpl implements FacultyService {
 
     @Override
     public Set<Faculty> filteredByColorFaculties(String color) {
-        Set<Faculty> filteredFaculties = new HashSet<>();
-        for (int i = 0; i < faculties.size(); i++) {
-            if (faculties.get(i).getColor().equals(color)) {
-                filteredFaculties.add(faculties.get(i));
-            }
-        }
-        return filteredFaculties;
+
+        return getAllFaculties().stream().
+                filter(faculty -> faculty.getColor().equals(color)).
+                collect(Collectors.toSet());
     }
 
     @Override
-    public Set<Faculty> getAllFaculties() {
-        return new HashSet<Faculty>(faculties.values());
+    public Collection<Faculty> getAllFaculties() {
+        return faculties.values();
     }
 }
