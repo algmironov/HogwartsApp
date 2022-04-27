@@ -1,19 +1,31 @@
 package ru.hogwarts.school.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-@Entity(name = "Faculties")
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
+import java.util.Collection;
+
+@JsonSerialize
+@Entity(name="faculties")
 public class Faculty {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
     private String name;
+    @NotNull
     private String color;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "faculty")
+    private Collection<Student> studentsOfFaculty;
 
     public Faculty(Long id, String name, String color) {
         this.id = id;
@@ -24,6 +36,11 @@ public class Faculty {
     public Faculty() {
 
     }
+
+
+//    public Collection<Student> getStudentsOfFaculty() {
+//        return studentsOfFaculty;
+//    }
 
     public Long getId() {
         return id;
@@ -68,4 +85,14 @@ public class Faculty {
         result = 31 * result + getColor().hashCode();
         return result;
     }
+
+//    @Override
+//    public String toString() {
+//        return "Faculty{" +
+//                "id=" + id +
+//                ", name='" + name + '\'' +
+//                ", color='" + color + '\'' +
+//                ", studentsOfFaculty=" + studentsOfFaculty +
+//                '}';
+//    }
 }

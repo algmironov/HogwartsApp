@@ -2,14 +2,13 @@ package ru.hogwarts.school.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.StudentRepository;
+import ru.hogwarts.school.service.FacultyService;
 import ru.hogwarts.school.service.StudentService;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -17,8 +16,11 @@ public class StudentServiceImpl implements StudentService {
 
     private final StudentRepository studentRepository;
 
-    public StudentServiceImpl(StudentRepository studentRepository) {
+    private final FacultyService facultyService;
+
+    public StudentServiceImpl(StudentRepository studentRepository, FacultyService facultyService) {
         this.studentRepository = studentRepository;
+        this.facultyService = facultyService;
     }
 
     @Override
@@ -39,8 +41,12 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Student findStudent(long id) {
-
         return studentRepository.findById(id).get();
+    }
+
+    @Override
+    public Student findStudentByName(String name) {
+        return studentRepository.findStudentByNameIgnoreCase(name);
     }
 
     @Override
@@ -52,5 +58,28 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public Collection<Student> getAllStudents() {
         return studentRepository.findAll();
+    }
+
+
+    @Override
+    public Set<Student> findAllByAgeBetween(int minAge, int maxAge) {
+        return studentRepository.findAllByAgeBetween(minAge, maxAge);
+    }
+
+    @Override
+    public Faculty getFacultyByStudentId(Long studentId) {
+        Student student = findStudent(studentId);
+        return student.getFaculty();
+    }
+
+    @Override
+    public Faculty getFacultyByStudentName(String studentName) {
+        return findStudentByName(studentName).getFaculty();
+    }
+
+
+    @Override
+    public Collection<Student> findAllStudentsByFacultyName (String facultyName) {
+        return studentRepository.findAllStudentsByFacultyNameIgnoreCase(facultyName);
     }
 }
