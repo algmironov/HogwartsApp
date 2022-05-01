@@ -82,4 +82,5 @@ public class StudentServiceImpl implements StudentService {
     public Collection<Student> findAllStudentsByFacultyName (String facultyName) {
         return studentRepository.findAllStudentsByFacultyNameIgnoreCase(facultyName);
     }
+
 }
