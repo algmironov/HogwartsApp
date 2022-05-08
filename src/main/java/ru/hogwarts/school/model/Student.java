@@ -1,14 +1,61 @@
 package ru.hogwarts.school.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import javax.persistence.*;
+
+@JsonSerialize
+@Entity(name="students")
 public class Student {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
     private int age;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "faculty_id")
+    private Faculty faculty;
+
+    @OneToOne
+//    @JoinColumn(name = "avatar")
+    private Avatar avatar;
+
 
     public Student(Long id, String name, int age) {
         this.id = id;
         this.name = name;
         this.age = age;
+    }
+
+    public Student(Long id, String name, int age, Faculty faculty) {
+        this.id = id;
+        this.name = name;
+        this.age = age;
+        this.faculty = faculty;
+    }
+
+    public Student() {
+
+    }
+
+    public Avatar getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(Avatar avatar) {
+        this.avatar = avatar;
+    }
+
+    public Faculty getFaculty() {
+        return faculty;
+    }
+
+    public void setFaculty(Faculty faculty) {
+        this.faculty = faculty;
     }
 
     public Long getId() {
@@ -54,4 +101,14 @@ public class Student {
         result = 31 * result + getAge();
         return result;
     }
+
+//    @Override
+//    public String toString() {
+//        return "Student{" +
+//                "id=" + id +
+//                ", name='" + name + '\'' +
+//                ", age=" + age +
+//                ", faculty=" + faculty +
+//                '}';
+//    }
 }

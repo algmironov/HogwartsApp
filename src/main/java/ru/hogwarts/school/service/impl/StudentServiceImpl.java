@@ -1,50 +1,52 @@
 package ru.hogwarts.school.service.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
+import ru.hogwarts.school.repository.StudentRepository;
+import ru.hogwarts.school.service.FacultyService;
 import ru.hogwarts.school.service.StudentService;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class StudentServiceImpl implements StudentService {
 
-    HashMap<Long, Student> students = new HashMap<>();
-    private long studentId = 0;
+    private final StudentRepository studentRepository;
+
+    private final FacultyService facultyService;
+
+    public StudentServiceImpl(StudentRepository studentRepository, FacultyService facultyService) {
+        this.studentRepository = studentRepository;
+        this.facultyService = facultyService;
+    }
 
     @Override
     public Student createStudent(Student student) {
-        student.setId(++studentId);
-        students.put(studentId, student);
-        return student;
+
+        return studentRepository.save(student);
     }
 
     @Override
     public Student editStudent(Student student) {
-        if (students.containsKey(student.getId())) {
-            students.put(student.getId(), student);
-            return student;
-        }
-        return null;
+        return studentRepository.save(student);
     }
 
     @Override
-    public Student deleteStudent(long id) {
-        if (students.containsKey(id)) {
-            return students.remove(id);
-        }
-        return null;
+    public void deleteStudent(long id) {
+        studentRepository.deleteById(id);
     }
 
     @Override
     public Student findStudent(long id) {
-        if (students.containsKey(id)) {
-            return students.get(id);
-        }
-        return null;
+        return studentRepository.findById(id).get();
+    }
+
+    @Override
+    public Student findStudentByName(String name) {
+        return studentRepository.findStudentByNameIgnoreCase(name);
     }
 
     @Override
@@ -54,7 +56,31 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Set<Student> getAllStudents() {
-        return new HashSet<>(students.values());
+    public Collection<Student> getAllStudents() {
+        return studentRepository.findAll();
     }
+
+
+    @Override
+    public Set<Student> findAllByAgeBetween(int minAge, int maxAge) {
+        return studentRepository.findAllByAgeBetween(minAge, maxAge);
+    }
+
+    @Override
+    public Faculty getFacultyByStudentId(Long studentId) {
+        Student student = findStudent(studentId);
+        return student.getFaculty();
+    }
+
+    @Override
+    public Faculty getFacultyByStudentName(String studentName) {
+        return findStudentByName(studentName).getFaculty();
+    }
+
+
+    @Override
+    public Collection<Student> findAllStudentsByFacultyName (String facultyName) {
+        return studentRepository.findAllStudentsByFacultyNameIgnoreCase(facultyName);
+    }
+
 }

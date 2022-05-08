@@ -3,9 +3,11 @@ package ru.hogwarts.school.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.StudentService;
 
+import java.util.Collection;
 import java.util.Set;
 
 @RestController
@@ -34,11 +36,8 @@ public class StudentController {
 
     @DeleteMapping("{id}")
     public ResponseEntity<Student> deleteStudent(@PathVariable Long id) {
-        Student studentToDelete = studentServiceImpl.deleteStudent(id);
-        if (studentToDelete == null) {
-            ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
-        return ResponseEntity.ok(studentToDelete);
+        studentServiceImpl.deleteStudent(id);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("{id}")
@@ -59,11 +58,45 @@ public class StudentController {
         return ResponseEntity.ok(filteredStudents);
     }
 
+    @GetMapping("/filter/ageBetween")
+    public ResponseEntity<Set<Student>> getStudentWithAgeBetweenMinAndMax(@RequestParam int minAge, @RequestParam int maxAge) {
+        Set<Student> studentWithAgeBetweenMinAndMax = studentServiceImpl.findAllByAgeBetween(minAge, maxAge);
+        if (studentWithAgeBetweenMinAndMax.isEmpty()) {
+            ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        return ResponseEntity.ok(studentWithAgeBetweenMinAndMax);
+    }
+
     @GetMapping
-    public ResponseEntity<Set<Student>> getAllStudents() {
+    public ResponseEntity<Collection<Student>> getAllStudents() {
         if (studentServiceImpl.getAllStudents().isEmpty()) {
             ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
         return ResponseEntity.ok(studentServiceImpl.getAllStudents());
+    }
+
+    @GetMapping("/getFaculty/studentName")
+    public ResponseEntity<Faculty> getFacultyOfStudent(@RequestParam String studentName) {
+        if (studentServiceImpl.findStudentByName(studentName) == null)  {
+            ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        return ResponseEntity.ok(studentServiceImpl.getFacultyByStudentName(studentName));
+    }
+
+    @GetMapping("/getFacultyById/{studentId}")
+    public ResponseEntity<Faculty> getFacultyOfStudent(@PathVariable Long studentId) {
+        if (!studentServiceImpl.getAllStudents().contains(studentServiceImpl.findStudent(studentId)))  {
+            ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        return ResponseEntity.ok(studentServiceImpl.getFacultyByStudentId(studentId));
+    }
+
+    @GetMapping("/studentsOfFaculty/{facultyName}")
+    public ResponseEntity<Collection<Student>> findAllStudentsOfFaculty(@PathVariable String facultyName) {
+        Collection<Student> studentsOfFaculty = studentServiceImpl.findAllStudentsByFacultyName(facultyName);
+        if (studentsOfFaculty.isEmpty()) {
+            ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        return ResponseEntity.ok(studentsOfFaculty);
     }
 }

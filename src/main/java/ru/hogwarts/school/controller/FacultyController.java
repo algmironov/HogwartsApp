@@ -1,5 +1,6 @@
 package ru.hogwarts.school.controller;
 
+import org.hibernate.cfg.CreateKeySecondPass;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,7 +12,7 @@ import java.util.Collection;
 import java.util.Set;
 
 @RestController
-@RequestMapping("faculties")
+@RequestMapping("/faculties")
 public class FacultyController {
 
     private final FacultyService facultyServiceImpl;
@@ -20,9 +21,14 @@ public class FacultyController {
         this.facultyServiceImpl = facultyServiceImpl;
     }
 
+
     @PostMapping
-    public Faculty createFaculty(@RequestBody Faculty faculty) {
-        return facultyServiceImpl.createFaculty(faculty);
+    public ResponseEntity<Faculty> createFaculty(@RequestBody Faculty faculty) {
+        if (faculty == null) {
+            ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        facultyServiceImpl.createFaculty(faculty);
+        return ResponseEntity.ok(faculty);
     }
 
     @PutMapping
@@ -36,11 +42,8 @@ public class FacultyController {
 
     @DeleteMapping("{id}")
     public ResponseEntity<Faculty> deleteFaculty(@PathVariable Long id) {
-        Faculty facultyToDelete = facultyServiceImpl.deleteFaculty(id);
-        if (facultyToDelete == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
-        return ResponseEntity.ok(facultyToDelete);
+        facultyServiceImpl.deleteFaculty(id);
+        return ResponseEntity.ok().build();
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
@@ -67,5 +70,14 @@ public class FacultyController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         return ResponseEntity.ok(facultyServiceImpl.getAllFaculties());
+    }
+
+    @GetMapping("/find/{name}&{color}")
+    public ResponseEntity<Collection<Faculty>> findByNameOrColor(@PathVariable String name, @PathVariable String color) {
+        Collection<Faculty> foundFaculties = facultyServiceImpl.findAllByNameOrColor(name, color);
+        if (foundFaculties.isEmpty()) {
+            ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        return ResponseEntity.ok(foundFaculties);
     }
 }

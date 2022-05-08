@@ -2,60 +2,59 @@ package ru.hogwarts.school.service.impl;
 
 import org.springframework.stereotype.Service;
 import ru.hogwarts.school.model.Faculty;
+import ru.hogwarts.school.model.Student;
+import ru.hogwarts.school.repository.FacultyRepository;
 import ru.hogwarts.school.service.FacultyService;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
 public class FacultyServiceImpl implements FacultyService {
-    HashMap<Long, Faculty> faculties = new HashMap<>();
-    private long facultyId = 0;
+
+    private final FacultyRepository facultyRepository;
+
+    public FacultyServiceImpl(FacultyRepository facultyRepository) {
+        this.facultyRepository = facultyRepository;
+    }
 
     @Override
     public Faculty createFaculty(Faculty faculty) {
-        faculty.setId(++facultyId);
-        faculties.put(facultyId, faculty);
-        return faculty;
+        return facultyRepository.save(faculty);
     }
 
     @Override
     public Faculty editFaculty(Faculty faculty) {
-        if (faculties.containsKey(faculty.getId())) {
-            faculties.put(faculty.getId(), faculty);
-            return faculty;
-        }
-        return null;
+        return facultyRepository.save(faculty);
     }
 
     @Override
-    public Faculty deleteFaculty(long id) {
-        if (faculties.containsKey(id)) {
-            return faculties.remove(id);
-        }
-        return null;
+    public void deleteFaculty(long id) {
+        facultyRepository.deleteById(id);
     }
 
     @Override
     public Faculty findFaculty(long id) {
-        if (faculties.containsKey(id)) {
-            return faculties.get(id);
-        }
-        return null;
+        return facultyRepository.findById(id).get();
     }
 
     @Override
     public Set<Faculty> filteredByColorFaculties(String color) {
 
         return getAllFaculties().stream().
-                filter(faculty -> faculty.getColor().equals(color)).
+                filter(faculty -> faculty.getColor().equalsIgnoreCase(color)).
                 collect(Collectors.toSet());
     }
 
     @Override
     public Collection<Faculty> getAllFaculties() {
-        return faculties.values();
+        return facultyRepository.findAll();
     }
+
+    @Override
+    public Collection<Faculty> findAllByNameOrColor(String name, String color) {
+        return facultyRepository.findAllByNameIgnoreCaseOrColorIgnoreCase(name, color);
+    }
+
 }
