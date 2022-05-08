@@ -21,7 +21,8 @@ public class FacultyServiceImpl implements FacultyService {
 
     @Override
     public Faculty createFaculty(Faculty faculty) {
-        return facultyRepository.save(faculty);
+        facultyRepository.save(faculty);
+        return facultyRepository.findByName(faculty.getName());
     }
 
     @Override
@@ -41,10 +42,7 @@ public class FacultyServiceImpl implements FacultyService {
 
     @Override
     public Set<Faculty> filteredByColorFaculties(String color) {
-
-        return getAllFaculties().stream().
-                filter(faculty -> faculty.getColor().equalsIgnoreCase(color)).
-                collect(Collectors.toSet());
+        return facultyRepository.findAllByColor(color);
     }
 
     @Override

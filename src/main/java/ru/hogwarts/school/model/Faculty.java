@@ -86,13 +86,13 @@ public class Faculty {
         return result;
     }
 
-//    @Override
-//    public String toString() {
-//        return "Faculty{" +
-//                "id=" + id +
-//                ", name='" + name + '\'' +
-//                ", color='" + color + '\'' +
-//                ", studentsOfFaculty=" + studentsOfFaculty +
-//                '}';
-//    }
+    @Override
+    public String toString() {
+        return "Faculty{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", color='" + color + '\'' +
+                ", studentsOfFaculty=" + studentsOfFaculty +
+                '}';
+    }
 }
