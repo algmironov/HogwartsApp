@@ -83,4 +83,10 @@ public class StudentServiceImpl implements StudentService {
         return studentRepository.findAllStudentsByFacultyNameIgnoreCase(facultyName);
     }
 
+    @Override
+    public void setFacultyById(Student student, Long id) {
+        Faculty faculty = facultyService.findFaculty(id);
+        student.setFaculty(faculty);
+    }
+
 }

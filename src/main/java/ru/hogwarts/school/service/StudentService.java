@@ -23,9 +23,12 @@ public interface StudentService {
     Set<Student> findAllByAgeBetween(int minAge, int maxAge);
 
     Faculty getFacultyByStudentId(Long studentId);
+
     Faculty getFacultyByStudentName(String studentName);
 
-    Collection<Student> findAllStudentsByFacultyName (String facultyName);
+    Collection<Student> findAllStudentsByFacultyName(String facultyName);
 
     Student findStudentByName(String studentName);
+
+    void setFacultyById(Student student, Long id);
 }

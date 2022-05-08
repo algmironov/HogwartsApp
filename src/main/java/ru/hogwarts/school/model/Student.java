@@ -21,7 +21,6 @@ public class Student {
     private Faculty faculty;
 
     @OneToOne
-//    @JoinColumn(name = "avatar")
     private Avatar avatar;
 
 
@@ -57,6 +56,7 @@ public class Student {
     public void setFaculty(Faculty faculty) {
         this.faculty = faculty;
     }
+
 
     public Long getId() {
         return id;
