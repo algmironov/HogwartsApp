@@ -250,6 +250,8 @@ public class FacultyControllerTests {
 
         verify(facultyRepository, atLeastOnce()).deleteById(id);
     }
+
+
 }
 
 
