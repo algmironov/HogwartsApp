@@ -99,4 +99,32 @@ public class StudentController {
         }
         return ResponseEntity.ok(studentsOfFaculty);
     }
+
+    @GetMapping("/getStudentsCount")
+    public ResponseEntity<Integer> getStudentsCount() {
+        Integer studentsCount = studentServiceImpl.getStudentsCount();
+        if (studentsCount == null) {
+            ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        return ResponseEntity.ok(studentsCount);
+    }
+
+    @GetMapping("/getAverageAge")
+    public ResponseEntity<Integer> getAverageAge() {
+        Integer averageAge = studentServiceImpl.getAverageAge();
+        if (averageAge == null) {
+            ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        return ResponseEntity.ok(averageAge);
+    }
+
+    @GetMapping("/lastFive")
+    public ResponseEntity<Collection<Student>> getLastFiveStudents() {
+        Collection<Student> lastFiveStudents = studentServiceImpl.getLastFiveStudents();
+        if (lastFiveStudents.isEmpty()) {
+            ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        return ResponseEntity.ok(lastFiveStudents);
+    }
+
 }

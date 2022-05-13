@@ -31,4 +31,10 @@ public interface StudentService {
     Student findStudentByName(String studentName);
 
     void setFacultyById(Student student, Long id);
+
+    Integer getStudentsCount();
+
+    Integer getAverageAge();
+
+    Collection<Student> getLastFiveStudents();
 }

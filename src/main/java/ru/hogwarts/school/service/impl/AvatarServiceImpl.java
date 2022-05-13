@@ -2,6 +2,7 @@ package ru.hogwarts.school.service.impl;
 
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -11,9 +12,12 @@ import ru.hogwarts.school.repository.AvatarRepository;
 import ru.hogwarts.school.service.AvatarService;
 import ru.hogwarts.school.service.StudentService;
 
+import java.awt.print.Pageable;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
 import static java.nio.file.StandardOpenOption.CREATE_NEW;
@@ -60,6 +64,12 @@ public class AvatarServiceImpl implements AvatarService {
         avatar.setData(file.getBytes());
         studentToAddAvatar.setAvatar(avatar);
         avatarRepository.save(avatar);
+    }
+
+    @Override
+    public List<Avatar> findAll(Integer pageNumber, Integer pageSize) {
+        PageRequest pageRequest = PageRequest.of(pageNumber - 1, pageSize);
+        return avatarRepository.findAll(pageRequest).getContent();
     }
 
     @Override
