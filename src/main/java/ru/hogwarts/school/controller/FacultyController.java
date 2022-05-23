@@ -73,7 +73,7 @@ public class FacultyController {
     }
 
     @GetMapping("/find/{name}&{color}")
-    public ResponseEntity<Collection<Faculty>> findByNameOrColor(@PathVariable String name, @PathVariable String color) {
+    public ResponseEntity<Collection<Faculty>> findByNameOrColor(@PathVariable("name") String name, @PathVariable("color") String color) {
         Collection<Faculty> foundFaculties = facultyServiceImpl.findAllByNameOrColor(name, color);
         if (foundFaculties.isEmpty()) {
             ResponseEntity.status(HttpStatus.NOT_FOUND).build();
