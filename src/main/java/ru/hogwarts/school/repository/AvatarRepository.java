@@ -5,9 +5,6 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 import ru.hogwarts.school.model.Avatar;
 
-import java.awt.print.Pageable;
-import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 
 @Repository
