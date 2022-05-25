@@ -75,7 +75,7 @@ public class StudentController {
 
     @GetMapping("/filter/{age}")
     public ResponseEntity<Set<Student>> getFilteredStudents(@PathVariable int age) {
-        Set<Student> filteredStudents= studentServiceImpl.getFilteredStudents(age);
+        Set<Student> filteredStudents = studentServiceImpl.getFilteredStudents(age);
         if (filteredStudents.isEmpty()) {
             logger.error("There is no student with age= " + age);
             ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -104,7 +104,7 @@ public class StudentController {
 
     @GetMapping("/getFaculty/studentName")
     public ResponseEntity<Faculty> getFacultyOfStudent(@RequestParam String studentName) {
-        if (studentServiceImpl.findStudentByName(studentName) == null)  {
+        if (studentServiceImpl.findStudentByName(studentName) == null) {
             logger.error("There is no such student with name = " + studentName);
             ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
@@ -113,7 +113,7 @@ public class StudentController {
 
     @GetMapping("/getFacultyById/{studentId}")
     public ResponseEntity<Faculty> getFacultyOfStudent(@PathVariable Long studentId) {
-        if (!studentServiceImpl.getAllStudents().contains(studentServiceImpl.findStudent(studentId)))  {
+        if (!studentServiceImpl.getAllStudents().contains(studentServiceImpl.findStudent(studentId))) {
             logger.error("There is no such student with id = " + studentId);
             ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
@@ -159,4 +159,17 @@ public class StudentController {
         return ResponseEntity.ok(lastFiveStudents);
     }
 
+    @GetMapping("/parallelStream/nameWithAOnTheStart")
+    public ResponseEntity<List<String>> getStudentsWithNamesStartingWithALetter() {
+        List<String> students = studentServiceImpl.getStudentsWithNamesStartingWithALetter();
+        if (students.isEmpty()) {
+            logger.error("There are no names with first letter A");
+        }
+        return ResponseEntity.ok(students);
+    }
+
+    @GetMapping("/parallelStream/averageAge")
+    public ResponseEntity<Double> getAverageAgeUsingParallelStream() {
+        return ResponseEntity.ok(studentServiceImpl.getAverageAgeUsingParallelStream());
+    }
 }
