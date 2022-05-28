@@ -1,5 +1,7 @@
 package ru.hogwarts.school.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -22,6 +24,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/avatar")
 public class AvatarController {
+    Logger logger = LoggerFactory.getLogger(AvatarController.class);
 
     private final AvatarService avatarServiceImpl;
 
@@ -32,6 +35,7 @@ public class AvatarController {
     @PostMapping(value = "/{id}/avatar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> uploadAvatar(@PathVariable Long id, @RequestParam MultipartFile avatar) throws IOException {
         if (avatar.getSize() > 1024 * 500) {
+            logger.error("Attempting to upload too large file!");
             return ResponseEntity.badRequest().body("Too large file!");
         }
         avatarServiceImpl.uploadAvatar(id, avatar);
@@ -66,6 +70,7 @@ public class AvatarController {
                                                             @RequestParam("size") Integer pageSize) {
         List<Avatar> avatars = avatarServiceImpl.findAll(pageNumber, pageSize);
         if (avatars.isEmpty()) {
+            logger.error("Couldn't find avatars");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
         return ResponseEntity.ok(avatars);
