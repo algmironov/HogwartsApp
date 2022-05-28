@@ -9,8 +9,11 @@ import ru.hogwarts.school.repository.FacultyRepository;
 import ru.hogwarts.school.service.FacultyService;
 
 import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class FacultyServiceImpl implements FacultyService {
@@ -66,4 +69,20 @@ public class FacultyServiceImpl implements FacultyService {
         return facultyRepository.findAllByNameIgnoreCaseOrColorIgnoreCase(name, color);
     }
 
+    @Override
+    public String getLongestFacultyName() {
+        logger.info("Searching for longest faculty name");
+
+        List<String> names = facultyRepository.findAll().parallelStream().
+                map(Faculty::getName).collect(Collectors.toList()).
+                parallelStream().sorted(Comparator.comparingInt(String::length)).collect(Collectors.toList());
+        return names.get(names.size() -1);
+    }
+
+    @Override
+    public Integer getResultWithModifiedParallelStream() {
+        return Stream.iterate(1, a -> a +1).parallel()
+                .limit(1_000_000).
+                reduce(0, Integer::sum);
+    }
 }

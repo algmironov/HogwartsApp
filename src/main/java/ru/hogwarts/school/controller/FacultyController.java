@@ -86,7 +86,7 @@ public class FacultyController {
         } catch (Exception e) {
             logger.error("Couldn't find faculties");
         }
-       return ResponseEntity.ok().build();
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/find/{name}&{color}")
@@ -97,5 +97,15 @@ public class FacultyController {
             ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
         return ResponseEntity.ok(foundFaculties);
+    }
+
+    @GetMapping("/getLongestFacultyName")
+    public ResponseEntity<String> getLongestFacultyName() {
+        return ResponseEntity.ok(facultyServiceImpl.getLongestFacultyName());
+    }
+
+    @GetMapping("/task4")
+    public ResponseEntity<Integer> getResultWithModifiedParallelStream() {
+        return ResponseEntity.ok(facultyServiceImpl.getResultWithModifiedParallelStream());
     }
 }

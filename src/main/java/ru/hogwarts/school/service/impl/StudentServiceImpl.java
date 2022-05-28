@@ -122,4 +122,18 @@ public class StudentServiceImpl implements StudentService {
         return studentRepository.getLastFiveStudents();
     }
 
+    @Override
+    public List<String> getStudentsWithNamesStartingWithALetter() {
+        logger.info("Requesting students' names with A letter on the start");
+        return  studentRepository.findAll().parallelStream().map(Student::getName).collect(Collectors.toList()).
+                parallelStream().filter(n -> n.startsWith("A")).
+                sorted(Comparator.naturalOrder()).collect(Collectors.toList()).
+                parallelStream().map(String::toUpperCase).collect(Collectors.toList());
+    }
+
+    @Override
+    public Double getAverageAgeUsingParallelStream() {
+        logger.info("Requesting average age");
+        return studentRepository.findAll().parallelStream().mapToInt(Student::getAge).average().getAsDouble();
+    }
 }

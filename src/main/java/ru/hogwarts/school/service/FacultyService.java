@@ -23,4 +23,8 @@ public interface FacultyService {
 
     Collection<Faculty> findAllByNameOrColor(String name, String color);
 
+    String getLongestFacultyName();
+
+    Integer getResultWithModifiedParallelStream();
+
 }
