@@ -172,4 +172,14 @@ public class StudentController {
     public ResponseEntity<Double> getAverageAgeUsingParallelStream() {
         return ResponseEntity.ok(studentServiceImpl.getAverageAgeUsingParallelStream());
     }
+
+    @GetMapping("/studentsThread")
+    public void studentsThread() {
+        studentServiceImpl.studentsThread();
+    }
+
+    @GetMapping("/studentsSynchronizedThread")
+    public void studentsSynchronizedThread() {
+        studentServiceImpl.studentsSynchronizedThread();
+    }
 }

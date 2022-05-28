@@ -2,7 +2,6 @@ package ru.hogwarts.school.service.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
@@ -26,6 +25,8 @@ public class StudentServiceImpl implements StudentService {
         this.studentRepository = studentRepository;
         this.facultyService = facultyService;
     }
+
+    public final Object flag = new Object();
 
     @Override
     public Student createStudent(Student student) {
@@ -136,4 +137,57 @@ public class StudentServiceImpl implements StudentService {
         logger.info("Requesting average age");
         return studentRepository.findAll().parallelStream().mapToInt(Student::getAge).average().getAsDouble();
     }
+
+    public void printStudent(int index) {
+        List<String> names = studentRepository.
+                findAll().stream().
+                map(Student::getName).
+                collect(Collectors.toList());
+            System.out.println(names.get(index));
+
+    }
+    public void printSynchronizedStudent(int index) {
+        synchronized (flag) {
+            List<String> names = studentRepository.
+                    findAll().stream().
+                    map(Student::getName).
+                    collect(Collectors.toList());
+            System.out.println(names.get(index));
+        }
+    }
+
+    @Override
+    public void studentsThread() {
+        printStudent(0);
+        printStudent(1);
+        new Thread(() -> {
+            printStudent(2);
+            printStudent(3);
+        }).start();
+        new Thread(() -> {
+            printStudent(4);
+            printStudent(5);
+        }).start();
+        printStudent(6);
+        printStudent(7);
+
+    }
+
+    @Override
+    public void studentsSynchronizedThread() {
+        printSynchronizedStudent(0);
+        printSynchronizedStudent(1);
+        new Thread(() -> {
+            printSynchronizedStudent(2);
+            printSynchronizedStudent(3);
+        }).start();
+        new Thread(() -> {
+            printSynchronizedStudent(4);
+            printSynchronizedStudent(5);
+        }).start();
+        printSynchronizedStudent(6);
+        printSynchronizedStudent(7);
+
+    }
+
 }
